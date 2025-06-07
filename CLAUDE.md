@@ -45,3 +45,4 @@ This is a user story dependency visualization tool that helps teams visualize an
 ## Guidance
 
 - Do not include Claude attribution or references in commit messages
+- Use conventional commits specification for all commit messages
