@@ -1,4 +1,5 @@
 import { Group, Rect, Text } from 'react-konva'
+import type { KonvaEventObject } from 'konva/lib/Node'
 import type { UserStory } from '../types/story'
 
 interface StoryCardProps {
@@ -30,17 +31,54 @@ export const StoryCard = ({
     }
   }
 
+  const handleDragStart = (e: KonvaEventObject<DragEvent>) => {
+    // Move card to top layer when dragging starts
+    e.target.moveToTop()
+    // Change cursor to grabbing
+    const stage = e.target.getStage()
+    if (stage) {
+      stage.container().style.cursor = 'grabbing'
+    }
+  }
+
+  const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
+    // Reset cursor
+    const stage = e.target.getStage()
+    if (stage) {
+      stage.container().style.cursor = 'grab'
+    }
+
+    onDragEnd({
+      x: e.target.x(),
+      y: e.target.y(),
+    })
+  }
+
+  const handleMouseEnter = (e: KonvaEventObject<MouseEvent>) => {
+    // Change cursor to grab when hovering
+    const stage = e.target.getStage()
+    if (stage) {
+      stage.container().style.cursor = 'grab'
+    }
+  }
+
+  const handleMouseLeave = (e: KonvaEventObject<MouseEvent>) => {
+    // Reset cursor when leaving card
+    const stage = e.target.getStage()
+    if (stage) {
+      stage.container().style.cursor = 'default'
+    }
+  }
+
   return (
     <Group
       x={story.position.x}
       y={story.position.y}
       draggable
-      onDragEnd={(e) => {
-        onDragEnd({
-          x: e.target.x(),
-          y: e.target.y(),
-        })
-      }}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={onSelect}
       onTap={onSelect}
     >
