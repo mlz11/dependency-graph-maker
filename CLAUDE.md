@@ -53,3 +53,4 @@ This is a user story dependency visualization tool that helps teams visualize an
 
 - Do not include Claude attribution or references in commit messages
 - Use conventional commits specification for all commit messages
+- Only create pull requests when explicitly requested
