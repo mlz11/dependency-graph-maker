@@ -25,7 +25,8 @@ This is a user story dependency visualization tool that helps teams visualize an
 - **Frontend**: React 19 + TypeScript
 - **Canvas**: HTML5 Canvas with Konva.js and react-konva
 - **State Management**: Zustand
-- **Testing**: Vitest + React Testing Library + Puppeteer
+- **Testing**: Vitest + React Testing Library + Puppeteer (TypeScript)
+- **TypeScript Runner**: tsx
 - **Build Tool**: Vite
 - **Code Formatting**: Prettier
 - **Pre-commit Hooks**: Husky
@@ -49,7 +50,7 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `/src/stores/` - Zustand state management
 - `/src/types/` - TypeScript type definitions
 - `/src/test/` - Test setup and utilities
-- `/tests/e2e/` - End-to-end tests
+- `/tests/e2e/` - End-to-end tests (TypeScript)
 
 ## Pre-commit Hooks
 

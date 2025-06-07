@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# E2E test screenshots (keep local only)
+tests/e2e/screenshots/
+
+# TypeScript build cache files
+*.tsbuildinfo

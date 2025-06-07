@@ -1,24 +1,28 @@
-import puppeteer from 'puppeteer'
+import puppeteer, {
+  type Browser,
+  type Page,
+  type ElementHandle,
+} from 'puppeteer'
 
-async function testInteractions() {
-  const browser = await puppeteer.launch({
+async function testInteractions(): Promise<void> {
+  const browser: Browser = await puppeteer.launch({
     headless: false,
     devtools: false,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 
   try {
-    const page = await browser.newPage()
+    const page: Page = await browser.newPage()
 
     console.log('🚀 Testing full app interactions...')
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle2' })
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise<void>((resolve) => setTimeout(resolve, 2000))
 
     // Add multiple stories
     console.log('📝 Adding multiple stories...')
     for (let i = 0; i < 3; i++) {
       await page.click('button')
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise<void>((resolve) => setTimeout(resolve, 500))
     }
 
     // Check story count
@@ -33,7 +37,7 @@ async function testInteractions() {
     console.log('📸 Final screenshot with multiple stories taken')
 
     // Test canvas interaction (click on canvas)
-    const canvas = await page.$('canvas')
+    const canvas: ElementHandle<Element> | null = await page.$('canvas')
     if (canvas) {
       const box = await canvas.boundingBox()
       if (box) {

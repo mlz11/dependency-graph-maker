@@ -1,21 +1,21 @@
-import puppeteer from 'puppeteer'
+import puppeteer, { type Browser, type Page } from 'puppeteer'
 
-async function testApp() {
-  const browser = await puppeteer.launch({
+async function testApp(): Promise<void> {
+  const browser: Browser = await puppeteer.launch({
     headless: false,
     devtools: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 
   try {
-    const page = await browser.newPage()
+    const page: Page = await browser.newPage()
 
     // Navigate to the app
     console.log('🚀 Navigating to http://localhost:5173/')
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle2' })
 
     // Wait for app to load
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise<void>((resolve) => setTimeout(resolve, 2000))
 
     // Take screenshot of initial state
     await page.screenshot({
@@ -41,7 +41,7 @@ async function testApp() {
 
       // Click the button to add a story
       await button.click()
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise<void>((resolve) => setTimeout(resolve, 1000))
 
       // Take screenshot after adding story
       await page.screenshot({
@@ -66,14 +66,14 @@ async function testApp() {
     }
 
     // Check for any console errors
-    const logs = []
+    const logs: string[] = []
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
         logs.push(`Console Error: ${msg.text()}`)
       }
     })
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise<void>((resolve) => setTimeout(resolve, 1000))
 
     if (logs.length > 0) {
       console.log('❌ Console errors found:')
