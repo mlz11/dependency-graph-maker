@@ -1,6 +1,7 @@
 import { Group, Rect, Text } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import type { UserStory } from '../types/story'
+import { useStoryStore } from '../stores/storyStore'
 
 interface StoryCardProps {
   story: UserStory
@@ -18,6 +19,8 @@ export const StoryCard = ({
   onSelect,
   onDragEnd,
 }: StoryCardProps) => {
+  const { dragState, setDragState } = useStoryStore()
+
   const getStatusColor = (status: UserStory['status']) => {
     switch (status) {
       case 'todo':
@@ -31,6 +34,32 @@ export const StoryCard = ({
     }
   }
 
+  const getBorderColor = () => {
+    if (dragState.draggedStoryId === story.id) {
+      return '#ef4444' // Red border for dragged card
+    }
+    if (dragState.hoverTargetId === story.id) {
+      return '#22c55e' // Green border for hover target
+    }
+    if (isSelected) {
+      return '#3b82f6' // Blue border for selected
+    }
+    return '#d1d5db' // Default gray border
+  }
+
+  const getBorderWidth = () => {
+    if (
+      dragState.draggedStoryId === story.id ||
+      dragState.hoverTargetId === story.id
+    ) {
+      return 3
+    }
+    if (isSelected) {
+      return 2
+    }
+    return 1
+  }
+
   const handleDragStart = (e: KonvaEventObject<DragEvent>) => {
     // Move card to top layer when dragging starts
     e.target.moveToTop()
@@ -39,6 +68,12 @@ export const StoryCard = ({
     if (stage) {
       stage.container().style.cursor = 'grabbing'
     }
+    // Set drag state
+    setDragState({
+      isDragging: true,
+      draggedStoryId: story.id,
+      hoverTargetId: null,
+    })
   }
 
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
@@ -47,6 +82,13 @@ export const StoryCard = ({
     if (stage) {
       stage.container().style.cursor = 'grab'
     }
+
+    // Reset drag state
+    setDragState({
+      isDragging: false,
+      draggedStoryId: null,
+      hoverTargetId: null,
+    })
 
     onDragEnd({
       x: e.target.x(),
@@ -60,6 +102,13 @@ export const StoryCard = ({
     if (stage) {
       stage.container().style.cursor = 'grab'
     }
+
+    // If another card is being dragged, mark this as hover target
+    if (dragState.isDragging && dragState.draggedStoryId !== story.id) {
+      setDragState({
+        hoverTargetId: story.id,
+      })
+    }
   }
 
   const handleMouseLeave = (e: KonvaEventObject<MouseEvent>) => {
@@ -67,6 +116,13 @@ export const StoryCard = ({
     const stage = e.target.getStage()
     if (stage) {
       stage.container().style.cursor = 'default'
+    }
+
+    // Clear hover target if this card was the target
+    if (dragState.hoverTargetId === story.id) {
+      setDragState({
+        hoverTargetId: null,
+      })
     }
   }
 
@@ -87,8 +143,8 @@ export const StoryCard = ({
         width={CARD_WIDTH}
         height={CARD_HEIGHT}
         fill="white"
-        stroke={isSelected ? '#3b82f6' : '#d1d5db'}
-        strokeWidth={isSelected ? 2 : 1}
+        stroke={getBorderColor()}
+        strokeWidth={getBorderWidth()}
         cornerRadius={8}
         shadowColor="black"
         shadowBlur={4}

@@ -6,6 +6,7 @@ const mockStory: UserStory = {
   title: 'Test Story',
   status: 'todo',
   position: { x: 100, y: 200 },
+  dependencies: [],
 }
 
 describe('StoryCard', () => {
@@ -55,5 +56,34 @@ describe('StoryCard', () => {
       }
       expect(story.position).toEqual(position)
     })
+  })
+
+  it('should handle dependency relationships', () => {
+    const storyWithDeps: UserStory = {
+      ...mockStory,
+      dependencies: ['dep1', 'dep2'],
+    }
+
+    expect(storyWithDeps.dependencies).toEqual(['dep1', 'dep2'])
+    expect(storyWithDeps.dependencies?.length).toBe(2)
+  })
+
+  it('should handle empty dependencies', () => {
+    const storyNoDeps: UserStory = {
+      ...mockStory,
+      dependencies: [],
+    }
+
+    expect(storyNoDeps.dependencies).toEqual([])
+    expect(storyNoDeps.dependencies?.length).toBe(0)
+  })
+
+  it('should handle undefined dependencies', () => {
+    const storyUndefinedDeps: UserStory = {
+      ...mockStory,
+      dependencies: undefined,
+    }
+
+    expect(storyUndefinedDeps.dependencies).toBeUndefined()
   })
 })

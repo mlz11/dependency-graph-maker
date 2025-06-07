@@ -3,6 +3,7 @@ import { Stage, Layer } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import { useStoryStore } from '../stores/storyStore'
 import { StoryCard } from './StoryCard'
+import { DependencyArrow } from './DependencyArrow'
 
 interface StoryCanvasProps {
   width: number
@@ -12,8 +13,15 @@ interface StoryCanvasProps {
 export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
   const stageRef = useRef(null)
 
-  const { stories, selectedStoryId, selectStory, updateStoryPosition } =
-    useStoryStore()
+  const {
+    stories,
+    selectedStoryId,
+    dragState,
+    selectStory,
+    updateStoryPosition,
+    addDependency,
+    arrangeHierarchically,
+  } = useStoryStore()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -34,6 +42,26 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     }
   }
 
+  // Generate dependency arrows
+  const dependencyArrows = stories.flatMap((story) => {
+    if (!story.dependencies) return []
+
+    return story.dependencies
+      .map((depId) => {
+        const dependencyStory = stories.find((s) => s.id === depId)
+        if (!dependencyStory) return null
+
+        return (
+          <DependencyArrow
+            key={`${depId}-${story.id}`}
+            fromStory={dependencyStory}
+            toStory={story}
+          />
+        )
+      })
+      .filter(Boolean)
+  })
+
   return (
     <Stage
       ref={stageRef}
@@ -45,13 +73,27 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
       style={{ border: '1px solid #e5e7eb' }}
     >
       <Layer>
+        {/* Render arrows first (behind cards) */}
+        {dependencyArrows}
+        {/* Render story cards on top */}
         {stories.map((story) => (
           <StoryCard
             key={story.id}
             story={story}
             isSelected={selectedStoryId === story.id}
             onSelect={() => selectStory(story.id)}
-            onDragEnd={(position) => updateStoryPosition(story.id, position)}
+            onDragEnd={(position) => {
+              // Check if dropped over another card
+              if (dragState.hoverTargetId && dragState.draggedStoryId) {
+                // Create dependency: draggedStory depends on hoverTarget
+                addDependency(dragState.draggedStoryId, dragState.hoverTargetId)
+                // Arrange all cards hierarchically after creating dependency
+                setTimeout(() => arrangeHierarchically(), 100)
+              } else {
+                // Normal position update if not dropped over another card
+                updateStoryPosition(story.id, position)
+              }
+            }}
           />
         ))}
       </Layer>

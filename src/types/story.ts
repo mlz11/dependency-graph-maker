@@ -9,4 +9,11 @@ export interface UserStory {
     x: number
     y: number
   }
+  dependencies?: string[] // Array of story IDs that this story depends on
+}
+
+export interface DragState {
+  isDragging: boolean
+  draggedStoryId: string | null
+  hoverTargetId: string | null
 }
