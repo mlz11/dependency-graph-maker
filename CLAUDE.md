@@ -28,6 +28,7 @@ This is a user story dependency visualization tool that helps teams visualize an
 - **Testing**: Vitest + React Testing Library + Puppeteer
 - **Build Tool**: Vite
 - **Code Formatting**: Prettier
+- **Pre-commit Hooks**: Husky
 
 ### Key Components
 
@@ -49,6 +50,16 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `/src/types/` - TypeScript type definitions
 - `/src/test/` - Test setup and utilities
 - `/tests/e2e/` - End-to-end tests
+
+## Pre-commit Hooks
+
+The project uses Husky to enforce code quality before commits. The pre-commit hook runs:
+
+1. TypeScript type checking (`npm run build`)
+2. Code formatting check (`npm run format:check`)
+3. ESLint rules validation (`npm run lint:check`)
+4. Unit tests (`npm test -- --run`)
+5. E2E tests (if dev server is running on localhost:5173)
 
 ## Guidance
 
