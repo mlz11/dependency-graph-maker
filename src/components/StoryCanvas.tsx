@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { Stage, Layer } from 'react-konva'
+import type { KonvaEventObject } from 'konva/lib/Node'
 import { useStoryStore } from '../stores/storyStore'
 import { StoryCard } from './StoryCard'
 
@@ -25,7 +26,7 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectStory])
 
-  const handleStageClick = (e: any) => {
+  const handleStageClick = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     // If clicked on empty area, deselect
     const clickedOnEmpty = e.target === e.target.getStage()
     if (clickedOnEmpty) {

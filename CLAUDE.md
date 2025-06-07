@@ -14,6 +14,7 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `npm run test:ui` - Run tests with UI interface
 - `npm run test:e2e` - Run E2E tests with Puppeteer
 - `npm run lint` - Run ESLint
+- `npm run lint:check` - Check ESLint rules with zero tolerance for warnings
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
 
