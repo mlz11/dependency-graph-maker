@@ -1,57 +1,61 @@
 import puppeteer from 'puppeteer'
 
 async function debugApp() {
-  const browser = await puppeteer.launch({ 
+  const browser = await puppeteer.launch({
     headless: false,
     devtools: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
-  
+
   try {
     const page = await browser.newPage()
-    
+
     // Listen to console logs from the page
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       console.log('PAGE LOG:', msg.text())
     })
-    
-    page.on('pageerror', error => {
+
+    page.on('pageerror', (error) => {
       console.log('PAGE ERROR:', error.message)
     })
-    
+
     // Navigate to the app
     console.log('🚀 Navigating to http://localhost:5173/')
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle2' })
-    
+
     // Wait for page to load
-    await new Promise(resolve => setTimeout(resolve, 3000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+
     // Get page content
     const content = await page.content()
     console.log('📄 Page HTML (first 500 chars):')
     console.log(content.substring(0, 500))
-    
+
     // Check what's in the body
     const bodyContent = await page.evaluate(() => {
       return document.body ? document.body.innerHTML : 'No body found'
     })
     console.log('📦 Body content (first 300 chars):')
     console.log(bodyContent.substring(0, 300))
-    
+
     // Check for any elements
     const allElements = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('*')).map(el => el.tagName).slice(0, 10)
+      return Array.from(document.querySelectorAll('*'))
+        .map((el) => el.tagName)
+        .slice(0, 10)
     })
     console.log('🏷️ First 10 elements found:', allElements)
-    
+
     // Take a screenshot
-    await page.screenshot({ path: 'tests/e2e/screenshots/debug.png', fullPage: true })
+    await page.screenshot({
+      path: 'tests/e2e/screenshots/debug.png',
+      fullPage: true,
+    })
     console.log('📸 Debug screenshot taken')
-    
+
     // Keep browser open for manual inspection
     console.log('🔍 Browser will stay open for 30 seconds for inspection...')
-    await new Promise(resolve => setTimeout(resolve, 30000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 30000))
   } catch (error) {
     console.error('❌ Debug failed:', error)
   } finally {

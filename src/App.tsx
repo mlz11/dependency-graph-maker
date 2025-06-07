@@ -11,7 +11,7 @@ function App() {
     const handleResize = () => {
       setCanvasSize({
         width: Math.min(window.innerWidth - 40, 1200),
-        height: Math.min(window.innerHeight - 150, 800)
+        height: Math.min(window.innerHeight - 150, 800),
       })
     }
 
@@ -29,16 +29,23 @@ function App() {
       points: Math.floor(Math.random() * 8) + 1,
       position: {
         x: Math.random() * (canvasSize.width - 200),
-        y: Math.random() * (canvasSize.height - 120)
-      }
+        y: Math.random() * (canvasSize.height - 120),
+      },
     })
   }
 
   return (
     <div style={{ padding: '20px' }}>
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <div
+        style={{
+          marginBottom: '20px',
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'center',
+        }}
+      >
         <h1 style={{ margin: 0 }}>Dependency Graph Maker</h1>
-        <button 
+        <button
           onClick={handleAddSampleStory}
           style={{
             padding: '8px 16px',
@@ -46,7 +53,7 @@ function App() {
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
         >
           Add Sample Story
@@ -55,9 +62,9 @@ function App() {
           Stories: {stories.length}
         </span>
       </div>
-      
+
       <StoryCanvas width={canvasSize.width} height={canvasSize.height} />
-      
+
       <div style={{ marginTop: '20px', fontSize: '14px', color: '#6b7280' }}>
         <p>• Click and drag stories to move them around</p>
         <p>• Click on a story to select it (press Escape to deselect)</p>
