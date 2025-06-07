@@ -14,37 +14,35 @@ interface StoryState {
 export const useStoryStore = create<StoryState>((set) => ({
   stories: [],
   selectedStoryId: null,
-  
+
   addStory: (story) =>
     set((state) => ({
-      stories: [
-        ...state.stories,
-        { ...story, id: crypto.randomUUID() }
-      ]
+      stories: [...state.stories, { ...story, id: crypto.randomUUID() }],
     })),
-  
+
   updateStory: (id, updates) =>
     set((state) => ({
       stories: state.stories.map((story) =>
         story.id === id ? { ...story, ...updates } : story
-      )
+      ),
     })),
-  
+
   deleteStory: (id) =>
     set((state) => ({
       stories: state.stories.filter((story) => story.id !== id),
-      selectedStoryId: state.selectedStoryId === id ? null : state.selectedStoryId
+      selectedStoryId:
+        state.selectedStoryId === id ? null : state.selectedStoryId,
     })),
-  
+
   selectStory: (id) =>
     set(() => ({
-      selectedStoryId: id
+      selectedStoryId: id,
     })),
-  
+
   updateStoryPosition: (id, position) =>
     set((state) => ({
       stories: state.stories.map((story) =>
         story.id === id ? { ...story, position } : story
-      )
-    }))
+      ),
+    })),
 }))

@@ -11,13 +11,22 @@ interface StoryCardProps {
 const CARD_WIDTH = 200
 const CARD_HEIGHT = 120
 
-export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardProps) => {
+export const StoryCard = ({
+  story,
+  isSelected,
+  onSelect,
+  onDragEnd,
+}: StoryCardProps) => {
   const getStatusColor = (status: UserStory['status']) => {
     switch (status) {
-      case 'todo': return '#e5e7eb'
-      case 'in-progress': return '#fbbf24'
-      case 'done': return '#10b981'
-      default: return '#e5e7eb'
+      case 'todo':
+        return '#e5e7eb'
+      case 'in-progress':
+        return '#fbbf24'
+      case 'done':
+        return '#10b981'
+      default:
+        return '#e5e7eb'
     }
   }
 
@@ -29,7 +38,7 @@ export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardP
       onDragEnd={(e) => {
         onDragEnd({
           x: e.target.x(),
-          y: e.target.y()
+          y: e.target.y(),
         })
       }}
       onClick={onSelect}
@@ -48,7 +57,7 @@ export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardP
         shadowOffset={{ x: 2, y: 2 }}
         shadowOpacity={0.1}
       />
-      
+
       {/* Status indicator */}
       <Rect
         width={CARD_WIDTH}
@@ -56,7 +65,7 @@ export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardP
         fill={getStatusColor(story.status)}
         cornerRadius={[8, 8, 0, 0]}
       />
-      
+
       {/* Title */}
       <Text
         x={12}
@@ -69,7 +78,7 @@ export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardP
         wrap="word"
         ellipsis={true}
       />
-      
+
       {/* Points badge */}
       {story.points && (
         <>
@@ -92,7 +101,7 @@ export const StoryCard = ({ story, isSelected, onSelect, onDragEnd }: StoryCardP
           />
         </>
       )}
-      
+
       {/* Assignee */}
       {story.assignee && (
         <Text

@@ -10,13 +10,9 @@ interface StoryCanvasProps {
 
 export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
   const stageRef = useRef(null)
-  
-  const {
-    stories,
-    selectedStoryId,
-    selectStory,
-    updateStoryPosition
-  } = useStoryStore()
+
+  const { stories, selectedStoryId, selectStory, updateStoryPosition } =
+    useStoryStore()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

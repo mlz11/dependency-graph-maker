@@ -14,28 +14,35 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `npm run test:ui` - Run tests with UI interface
 - `npm run test:e2e` - Run E2E tests with Puppeteer
 - `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
 
 ## Architecture
 
 ### Tech Stack
+
 - **Frontend**: React 19 + TypeScript
 - **Canvas**: HTML5 Canvas with Konva.js and react-konva
 - **State Management**: Zustand
 - **Testing**: Vitest + React Testing Library + Puppeteer
 - **Build Tool**: Vite
+- **Code Formatting**: Prettier
 
 ### Key Components
+
 - `StoryCanvas` - Main canvas component handling user story visualization
 - `StoryCard` - Individual story card component with drag functionality
 - `useStoryStore` - Zustand store managing story state and operations
 
 ### Data Flow
+
 - User stories are stored in Zustand store with position coordinates
 - Canvas renders stories as draggable Konva components
 - Drag operations update story positions in real-time
 - Selection state managed globally for multi-story operations
 
 ### File Structure
+
 - `/src/components/` - React components
 - `/src/stores/` - Zustand state management
 - `/src/types/` - TypeScript type definitions
