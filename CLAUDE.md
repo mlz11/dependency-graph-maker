@@ -41,3 +41,7 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `/src/types/` - TypeScript type definitions
 - `/src/test/` - Test setup and utilities
 - `/tests/e2e/` - End-to-end tests
+
+## Guidance
+
+- Do not include Claude attribution or references in commit messages
