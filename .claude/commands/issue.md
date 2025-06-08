@@ -11,6 +11,7 @@ This command workflow is used to work on GitHub issues systematically.
    - Implement the changes
    - Test functionality using Puppeteer MCP when applicable
    - Run all quality checks (lint, typecheck, tests)
+   - Remove any unused code, variables, or imports
    - Commit changes with conventional commit messages
 5. **Validate completion**: Ensure all issue requirements are met before considering the work complete
 6. **Final validation**: Pause and ask for user validation before creating PR
