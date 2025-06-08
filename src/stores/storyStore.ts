@@ -4,16 +4,22 @@ import type { UserStory } from '../types/story'
 interface StoryState {
   stories: UserStory[]
   selectedStoryId: string | null
+  draggedStoryId: string | null
+  hoveredStoryId: string | null
   addStory: (story: Omit<UserStory, 'id'>) => void
   updateStory: (id: string, updates: Partial<UserStory>) => void
   deleteStory: (id: string) => void
   selectStory: (id: string | null) => void
   updateStoryPosition: (id: string, position: { x: number; y: number }) => void
+  setDraggedStory: (id: string | null) => void
+  setHoveredStory: (id: string | null) => void
 }
 
 export const useStoryStore = create<StoryState>((set) => ({
   stories: [],
   selectedStoryId: null,
+  draggedStoryId: null,
+  hoveredStoryId: null,
 
   addStory: (story) =>
     set((state) => ({
@@ -44,5 +50,15 @@ export const useStoryStore = create<StoryState>((set) => ({
       stories: state.stories.map((story) =>
         story.id === id ? { ...story, position } : story
       ),
+    })),
+
+  setDraggedStory: (id) =>
+    set(() => ({
+      draggedStoryId: id,
+    })),
+
+  setHoveredStory: (id) =>
+    set(() => ({
+      hoveredStoryId: id,
     })),
 }))
