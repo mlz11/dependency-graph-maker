@@ -1,5 +1,9 @@
 import { create } from 'zustand'
 import type { UserStory } from '../types/story'
+import {
+  calculateHierarchicalLayout,
+  animateToPositions,
+} from '../utils/layoutUtils'
 
 interface StoryState {
   stories: UserStory[]
@@ -21,6 +25,7 @@ interface StoryState {
   createDependency: (dependentId: string, dependsOnId: string) => void
   removeDependency: (dependentId: string, dependsOnId: string) => void
   getDependencies: () => Array<{ from: string; to: string }>
+  arrangeHierarchically: () => void
 }
 
 export const useStoryStore = create<StoryState>((set) => ({
@@ -85,7 +90,7 @@ export const useStoryStore = create<StoryState>((set) => ({
       hoveredStoryId: id,
     })),
 
-  createDependency: (dependentId, dependsOnId) =>
+  createDependency: (dependentId, dependsOnId) => {
     set((state) => {
       // Prevent self-dependency
       if (dependentId === dependsOnId) return state
@@ -110,7 +115,13 @@ export const useStoryStore = create<StoryState>((set) => ({
             : story
         ),
       }
-    }),
+    })
+
+    // Trigger hierarchical arrangement after dependency is created
+    setTimeout(() => {
+      useStoryStore.getState().arrangeHierarchically()
+    }, 100) // Small delay to ensure state update is complete
+  },
 
   removeDependency: (dependentId, dependsOnId) =>
     set((state) => ({
@@ -137,5 +148,24 @@ export const useStoryStore = create<StoryState>((set) => ({
     })
 
     return dependencies
+  },
+
+  arrangeHierarchically: () => {
+    const state = useStoryStore.getState()
+    const newPositions = calculateHierarchicalLayout(state.stories)
+
+    // Update positions with animation
+    animateToPositions(
+      state.stories,
+      newPositions,
+      (id, position) => {
+        set((currentState) => ({
+          stories: currentState.stories.map((story) =>
+            story.id === id ? { ...story, position } : story
+          ),
+        }))
+      },
+      800 // 800ms animation duration
+    )
   },
 }))
