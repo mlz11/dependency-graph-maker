@@ -13,6 +13,10 @@ This command workflow is used to work on GitHub issues systematically.
    - Run all quality checks (lint, typecheck, tests)
    - Commit changes with conventional commit messages
 5. **Validate completion**: Ensure all issue requirements are met before considering the work complete
+6. **Final validation**: Pause and ask for user validation before creating PR
+   - Demonstrate completion with screenshots/testing if needed
+   - Wait for explicit user approval
+   - Once validated, clean up TODO file and create pull request
 
 ## Quality Standards
 
