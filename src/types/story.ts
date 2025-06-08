@@ -9,4 +9,5 @@ export interface UserStory {
     x: number
     y: number
   }
+  dependencies?: string[] // Array of story IDs that this story depends on
 }

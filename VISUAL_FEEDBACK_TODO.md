@@ -29,35 +29,35 @@ Implementation of visual feedback system for drag-and-drop operations as specifi
 
 ### Phase 3: Enhanced StoryCard Component
 
-- [ ] **Add drag state props** to StoryCard interface
+- [x] **Add drag state props** to StoryCard interface
   - Add `isDragged: boolean` prop
   - Add `isHovered: boolean` prop
-- [ ] **Implement getBorderColor() logic** in StoryCard component
+- [x] **Implement getBorderColor() logic** in StoryCard component
   - Orange border (`#f59e0b`) when card is being dragged
   - Green border (`#10b981`) when card is being hovered over
   - Maintain existing blue (`#3b82f6`) for selected state
   - Default gray (`#d1d5db`) for normal state
-- [ ] **Enhanced drag event handlers** in StoryCard
+- [x] **Enhanced drag event handlers** in StoryCard
   - Update `handleDragStart` to set dragged state in store
   - Implement `handleDragMove` to detect hover targets using collision detection
   - Update `handleDragEnd` to clear both dragged and hovered states
-- [ ] **Update Rect component** to use dynamic border color
+- [x] **Update Rect component** to use dynamic border color
   - Replace static stroke logic with `getBorderColor()` function
   - Ensure proper border width for different states
 
 ### Phase 4: Canvas Integration
 
-- [ ] **Update StoryCanvas component** in `src/components/StoryCanvas.tsx`
+- [x] **Update StoryCanvas component** in `src/components/StoryCanvas.tsx`
   - Access `draggedStoryId` and `hoveredStoryId` from store
   - Pass `isDragged` prop to each StoryCard component
   - Pass `isHovered` prop to each StoryCard component
-- [ ] **Ensure proper cleanup** of drag states
+- [x] **Ensure proper cleanup** of drag states
   - Handle edge cases where drag operations are interrupted
   - Reset states on component unmount if necessary
 
 ### Phase 5: Testing & Validation
 
-- [ ] **Manual testing scenarios**
+- [x] **Manual testing scenarios**
   - Test dragging single card shows orange border
   - Test hovering over target card shows green border
   - Test moving away from target card resets border
