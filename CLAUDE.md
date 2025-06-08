@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
 This is a user story dependency visualization tool that helps teams visualize and manage dependencies between their user stories. The goal is to connect to databases of user stories (primarily Notion) and enable drag-and-drop creation of dependency relationships.
@@ -18,40 +14,6 @@ This is a user story dependency visualization tool that helps teams visualize an
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
 
-## Architecture
-
-### Tech Stack
-
-- **Frontend**: React 19 + TypeScript
-- **Canvas**: HTML5 Canvas with Konva.js and react-konva
-- **State Management**: Zustand
-- **Testing**: Vitest + React Testing Library + Puppeteer (TypeScript)
-- **TypeScript Runner**: tsx
-- **Build Tool**: Vite
-- **Code Formatting**: Prettier
-- **Pre-commit Hooks**: Husky
-
-### Key Components
-
-- `StoryCanvas` - Main canvas component handling user story visualization
-- `StoryCard` - Individual story card component with drag functionality
-- `useStoryStore` - Zustand store managing story state and operations
-
-### Data Flow
-
-- User stories are stored in Zustand store with position coordinates
-- Canvas renders stories as draggable Konva components
-- Drag operations update story positions in real-time
-- Selection state managed globally for multi-story operations
-
-### File Structure
-
-- `/src/components/` - React components
-- `/src/stores/` - Zustand state management
-- `/src/types/` - TypeScript type definitions
-- `/src/test/` - Test setup and utilities
-- `/tests/e2e/` - End-to-end tests (TypeScript)
-
 ## Pre-commit Hooks
 
 The project uses Husky to enforce code quality before commits. The pre-commit hook runs:
@@ -64,6 +26,7 @@ The project uses Husky to enforce code quality before commits. The pre-commit ho
 
 ## Guidance
 
-- Do not include Claude attribution or references in commit messages
+- Always check that development server is not already started before starting it
+- Never include Claude attribution or references in commit messages
 - Use conventional commits specification for all commit messages
 - Only create pull requests when explicitly requested
