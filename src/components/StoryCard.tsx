@@ -2,7 +2,7 @@ import { Group, Rect, Text } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import type { UserStory } from '../types/story'
 import { useStoryStore } from '../stores/storyStore'
-import { isPointerInsideCard } from '../utils/geometryUtils'
+import { isPointerInsideCardWithTransform } from '../utils/geometryUtils'
 
 interface StoryCardProps {
   story: UserStory
@@ -94,8 +94,21 @@ export const StoryCard = ({
         height: CARD_HEIGHT,
       }
 
+      // Get stage transformation info
+      const stageTransform = {
+        x: stage.x(),
+        y: stage.y(),
+        scaleX: stage.scaleX(),
+        scaleY: stage.scaleY(),
+      }
+
       if (
-        isPointerInsideCard(pointerPosition.x, pointerPosition.y, otherPosition)
+        isPointerInsideCardWithTransform(
+          pointerPosition.x,
+          pointerPosition.y,
+          otherPosition,
+          stageTransform
+        )
       ) {
         newHoveredStoryId = otherStory.id
         break // Only one card can be hovered at a time
