@@ -11,6 +11,7 @@ interface StoryCardProps {
   isHovered: boolean
   onSelect: () => void
   onDragEnd: (position: { x: number; y: number }) => void
+  onDragMove?: (position: { x: number; y: number }) => void
 }
 
 const CARD_WIDTH = 200
@@ -23,6 +24,7 @@ export const StoryCard = ({
   isHovered,
   onSelect,
   onDragEnd,
+  onDragMove,
 }: StoryCardProps) => {
   const {
     stories,
@@ -30,6 +32,7 @@ export const StoryCard = ({
     setHoveredStory,
     createDependency,
     hoveredStoryId,
+    setTempPosition,
   } = useStoryStore()
   const getStatusColor = (status: UserStory['status']) => {
     switch (status) {
@@ -64,8 +67,9 @@ export const StoryCard = ({
     if (stage) {
       stage.container().style.cursor = 'grabbing'
     }
-    // Set this card as being dragged
+    // Set this card as being dragged and clear any existing temp position
     setDraggedStory(story.id)
+    setTempPosition(story.id, null)
   }
 
   const handleDragMove = (e: KonvaEventObject<DragEvent>) => {
@@ -100,6 +104,14 @@ export const StoryCard = ({
 
     // Update hovered state only if it changed
     setHoveredStory(newHoveredStoryId)
+
+    // Update story position in real-time for arrow updates
+    if (onDragMove) {
+      onDragMove({
+        x: e.target.x(),
+        y: e.target.y(),
+      })
+    }
   }
 
   const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
@@ -115,9 +127,10 @@ export const StoryCard = ({
       createDependency(story.id, hoveredStoryId)
     }
 
-    // Clear drag states
+    // Clear drag states and temp position
     setDraggedStory(null)
     setHoveredStory(null)
+    setTempPosition(story.id, null)
 
     onDragEnd({
       x: e.target.x(),

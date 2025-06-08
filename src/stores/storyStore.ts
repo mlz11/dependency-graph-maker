@@ -6,11 +6,16 @@ interface StoryState {
   selectedStoryId: string | null
   draggedStoryId: string | null
   hoveredStoryId: string | null
+  tempPositions: Record<string, { x: number; y: number } | undefined> // Temporary positions during drag
   addStory: (story: Omit<UserStory, 'id'>) => void
   updateStory: (id: string, updates: Partial<UserStory>) => void
   deleteStory: (id: string) => void
   selectStory: (id: string | null) => void
   updateStoryPosition: (id: string, position: { x: number; y: number }) => void
+  setTempPosition: (
+    id: string,
+    position: { x: number; y: number } | null
+  ) => void
   setDraggedStory: (id: string | null) => void
   setHoveredStory: (id: string | null) => void
   createDependency: (dependentId: string, dependsOnId: string) => void
@@ -23,6 +28,7 @@ export const useStoryStore = create<StoryState>((set) => ({
   selectedStoryId: null,
   draggedStoryId: null,
   hoveredStoryId: null,
+  tempPositions: {},
 
   addStory: (story) =>
     set((state) => ({
@@ -56,6 +62,17 @@ export const useStoryStore = create<StoryState>((set) => ({
       stories: state.stories.map((story) =>
         story.id === id ? { ...story, position } : story
       ),
+      tempPositions: {
+        ...state.tempPositions,
+        [id]: undefined, // Clear temp position when setting final position
+      },
+    })),
+
+  setTempPosition: (id, position) =>
+    set((state) => ({
+      tempPositions: position
+        ? { ...state.tempPositions, [id]: position }
+        : { ...state.tempPositions, [id]: undefined },
     })),
 
   setDraggedStory: (id) =>

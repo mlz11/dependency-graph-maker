@@ -19,8 +19,10 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     selectedStoryId,
     draggedStoryId,
     hoveredStoryId,
+    tempPositions,
     selectStory,
     updateStoryPosition,
+    setTempPosition,
     getDependencies,
   } = useStoryStore()
 
@@ -43,13 +45,23 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     }
   }
 
-  // Get dependencies and create arrow data
+  // Get dependencies and create arrow data with real-time positions
   const dependencies = getDependencies()
   const arrows = dependencies
     .map(({ from, to }) => {
       const fromStory = stories.find((s) => s.id === from)
       const toStory = stories.find((s) => s.id === to)
-      return fromStory && toStory ? { fromStory, toStory } : null
+
+      if (!fromStory || !toStory) return null
+
+      // Use temp positions if available, otherwise use story positions
+      const fromPosition = tempPositions[from] || fromStory.position
+      const toPosition = tempPositions[to] || toStory.position
+
+      return {
+        fromStory: { ...fromStory, position: fromPosition },
+        toStory: { ...toStory, position: toPosition },
+      }
     })
     .filter(Boolean) as Array<{ fromStory: UserStory; toStory: UserStory }>
 
@@ -84,7 +96,11 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
             isDragged={draggedStoryId === story.id}
             isHovered={hoveredStoryId === story.id}
             onSelect={() => selectStory(story.id)}
-            onDragEnd={(position) => updateStoryPosition(story.id, position)}
+            onDragEnd={(position) => {
+              setTempPosition(story.id, null) // Clear temp position
+              updateStoryPosition(story.id, position)
+            }}
+            onDragMove={(position) => setTempPosition(story.id, position)}
           />
         ))}
       </Layer>
