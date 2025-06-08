@@ -8,8 +8,8 @@ interface LayoutNode {
 
 // Layout configuration
 const LAYOUT_CONFIG = {
-  HORIZONTAL_SPACING: 250, // Space between vertical columns
-  VERTICAL_SPACING: 150, // Space between cards in same column
+  HORIZONTAL_SPACING: 250, // Space between cards in same row
+  VERTICAL_SPACING: 150, // Space between rows (levels)
   START_X: 100, // Left margin
   START_Y: 100, // Top margin
   CARD_WIDTH: 200,
@@ -93,26 +93,30 @@ function topologicalSort(stories: UserStory[]): LayoutNode[][] {
 }
 
 /**
- * Calculate positions for each story in hierarchical layout
+ * Calculate positions for each story in hierarchical layout (top-to-bottom)
  */
 function calculatePositions(levels: LayoutNode[][]): LayoutNode[] {
   const result: LayoutNode[] = []
 
   levels.forEach((level, levelIndex) => {
-    const x =
-      LAYOUT_CONFIG.START_X + levelIndex * LAYOUT_CONFIG.HORIZONTAL_SPACING
+    // Y position increases with each level (top to bottom)
+    const y =
+      LAYOUT_CONFIG.START_Y + levelIndex * LAYOUT_CONFIG.VERTICAL_SPACING
 
-    // Center the cards vertically within the level
-    const totalHeight =
-      level.length * LAYOUT_CONFIG.CARD_HEIGHT +
-      (level.length - 1) * LAYOUT_CONFIG.VERTICAL_SPACING
-    const startY =
-      LAYOUT_CONFIG.START_Y + (level.length > 1 ? 0 : totalHeight / 4)
+    // Center the cards horizontally within the level
+    const totalWidth =
+      level.length * LAYOUT_CONFIG.CARD_WIDTH +
+      (level.length - 1) * LAYOUT_CONFIG.HORIZONTAL_SPACING
+    const startX = Math.max(
+      LAYOUT_CONFIG.START_X,
+      (800 - totalWidth) / 2 // Center on typical canvas width
+    )
 
     level.forEach((node, nodeIndex) => {
-      const y =
-        startY +
-        nodeIndex * (LAYOUT_CONFIG.CARD_HEIGHT + LAYOUT_CONFIG.VERTICAL_SPACING)
+      const x =
+        startX +
+        nodeIndex *
+          (LAYOUT_CONFIG.CARD_WIDTH + LAYOUT_CONFIG.HORIZONTAL_SPACING)
 
       result.push({
         ...node,
