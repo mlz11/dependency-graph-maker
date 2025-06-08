@@ -21,7 +21,7 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
   // Zoom configuration
   const ZOOM_MIN = 0.1
   const ZOOM_MAX = 3.0
-  const ZOOM_STEP = 0.1
+  const ZOOM_STEP = 0.025
 
   const {
     stories,
