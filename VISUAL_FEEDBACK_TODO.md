@@ -13,16 +13,16 @@ Implementation of visual feedback system for drag-and-drop operations as specifi
 
 ### Phase 1: Store Extensions for Drag State
 
-- [ ] **Extend StoryState interface** in `src/stores/storyStore.ts`
+- [x] **Extend StoryState interface** in `src/stores/storyStore.ts`
   - Add `draggedStoryId: string | null` property
   - Add `hoveredStoryId: string | null` property
-- [ ] **Add drag state actions** in `src/stores/storyStore.ts`
+- [x] **Add drag state actions** in `src/stores/storyStore.ts`
   - Implement `setDraggedStory(id: string | null)` action
   - Implement `setHoveredStory(id: string | null)` action
 
 ### Phase 2: Collision Detection Utilities
 
-- [ ] **Create geometry utilities** in `src/utils/geometryUtils.ts`
+- [x] **Create geometry utilities** in `src/utils/geometryUtils.ts`
   - Implement `isCardOverlapping()` function for collision detection
   - Calculate bounding box intersections between dragged and target cards
   - Return boolean indicating if cards overlap

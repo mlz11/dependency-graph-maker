@@ -12,8 +12,14 @@ interface StoryCanvasProps {
 export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
   const stageRef = useRef(null)
 
-  const { stories, selectedStoryId, selectStory, updateStoryPosition } =
-    useStoryStore()
+  const {
+    stories,
+    selectedStoryId,
+    draggedStoryId,
+    hoveredStoryId,
+    selectStory,
+    updateStoryPosition,
+  } = useStoryStore()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -50,6 +56,8 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
             key={story.id}
             story={story}
             isSelected={selectedStoryId === story.id}
+            isDragged={draggedStoryId === story.id}
+            isHovered={hoveredStoryId === story.id}
             onSelect={() => selectStory(story.id)}
             onDragEnd={(position) => updateStoryPosition(story.id, position)}
           />
