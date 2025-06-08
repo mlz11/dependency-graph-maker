@@ -24,7 +24,13 @@ export const StoryCard = ({
   onSelect,
   onDragEnd,
 }: StoryCardProps) => {
-  const { stories, setDraggedStory, setHoveredStory } = useStoryStore()
+  const {
+    stories,
+    setDraggedStory,
+    setHoveredStory,
+    createDependency,
+    hoveredStoryId,
+  } = useStoryStore()
   const getStatusColor = (status: UserStory['status']) => {
     switch (status) {
       case 'todo':
@@ -101,6 +107,12 @@ export const StoryCard = ({
     const stage = e.target.getStage()
     if (stage) {
       stage.container().style.cursor = 'grab'
+    }
+
+    // Check if card was dropped over another card (dependency creation)
+    if (hoveredStoryId && hoveredStoryId !== story.id) {
+      // Create dependency: dragged card depends on the hovered card
+      createDependency(story.id, hoveredStoryId)
     }
 
     // Clear drag states

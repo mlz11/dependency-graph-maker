@@ -3,6 +3,8 @@ import { Stage, Layer } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import { useStoryStore } from '../stores/storyStore'
 import { StoryCard } from './StoryCard'
+import { Arrow } from './Arrow'
+import type { UserStory } from '../types/story'
 
 interface StoryCanvasProps {
   width: number
@@ -19,6 +21,7 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     hoveredStoryId,
     selectStory,
     updateStoryPosition,
+    getDependencies,
   } = useStoryStore()
 
   useEffect(() => {
@@ -40,6 +43,16 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
     }
   }
 
+  // Get dependencies and create arrow data
+  const dependencies = getDependencies()
+  const arrows = dependencies
+    .map(({ from, to }) => {
+      const fromStory = stories.find((s) => s.id === from)
+      const toStory = stories.find((s) => s.id === to)
+      return fromStory && toStory ? { fromStory, toStory } : null
+    })
+    .filter(Boolean) as Array<{ fromStory: UserStory; toStory: UserStory }>
+
   return (
     <Stage
       ref={stageRef}
@@ -50,6 +63,18 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
       draggable
       style={{ border: '1px solid #e5e7eb' }}
     >
+      {/* Arrow layer (rendered below cards) */}
+      <Layer>
+        {arrows.map(({ fromStory, toStory }, index) => (
+          <Arrow
+            key={`${fromStory.id}-${toStory.id}-${index}`}
+            fromStory={fromStory}
+            toStory={toStory}
+          />
+        ))}
+      </Layer>
+
+      {/* Card layer (rendered above arrows) */}
       <Layer>
         {stories.map((story) => (
           <StoryCard
