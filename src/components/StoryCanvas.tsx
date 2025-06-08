@@ -149,8 +149,12 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
             background: scale >= ZOOM_MAX ? '#f3f4f6' : 'white',
             borderRadius: '4px',
             cursor: scale >= ZOOM_MAX ? 'not-allowed' : 'pointer',
-            fontSize: '16px',
+            fontSize: '18px',
             fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#374151',
           }}
           title="Zoom In"
         >
@@ -166,8 +170,12 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
             background: scale <= ZOOM_MIN ? '#f3f4f6' : 'white',
             borderRadius: '4px',
             cursor: scale <= ZOOM_MIN ? 'not-allowed' : 'pointer',
-            fontSize: '16px',
+            fontSize: '18px',
             fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#374151',
           }}
           title="Zoom Out"
         >
@@ -182,8 +190,12 @@ export const StoryCanvas = ({ width, height }: StoryCanvasProps) => {
             background: 'white',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontSize: '10px',
+            fontSize: '8px',
             fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#374151',
           }}
           title="Reset Zoom (100%)"
         >
