@@ -93,39 +93,108 @@ function topologicalSort(stories: UserStory[]): LayoutNode[][] {
 }
 
 /**
- * Calculate positions for each story in hierarchical layout (top-to-bottom)
+ * Calculate positions for each story in tree-like hierarchical layout
  */
 function calculatePositions(levels: LayoutNode[][]): LayoutNode[] {
   const result: LayoutNode[] = []
+  const storyMap = new Map<string, LayoutNode>()
 
+  // First pass: assign Y positions based on levels
   levels.forEach((level, levelIndex) => {
-    // Y position increases with each level (top to bottom)
     const y =
       LAYOUT_CONFIG.START_Y + levelIndex * LAYOUT_CONFIG.VERTICAL_SPACING
 
-    // Center the cards horizontally within the level
-    const totalWidth =
-      level.length * LAYOUT_CONFIG.CARD_WIDTH +
-      (level.length - 1) * LAYOUT_CONFIG.HORIZONTAL_SPACING
-    const startX = Math.max(
-      LAYOUT_CONFIG.START_X,
-      (800 - totalWidth) / 2 // Center on typical canvas width
-    )
-
-    level.forEach((node, nodeIndex) => {
-      const x =
-        startX +
-        nodeIndex *
-          (LAYOUT_CONFIG.CARD_WIDTH + LAYOUT_CONFIG.HORIZONTAL_SPACING)
-
-      result.push({
-        ...node,
-        position: { x, y },
-      })
+    level.forEach((node) => {
+      const nodeWithY = { ...node, position: { x: 0, y } }
+      storyMap.set(node.story.id, nodeWithY)
     })
   })
 
+  // Second pass: calculate X positions based on tree structure
+  const canvasWidth = 1200 // Assume canvas width
+  const processedNodes = new Set<string>()
+
+  // Start with root nodes (level 0) and position them
+  if (levels.length > 0) {
+    const rootLevel = levels[0]
+    const rootSpacing = Math.max(300, canvasWidth / (rootLevel.length + 1))
+
+    rootLevel.forEach((node, index) => {
+      const x = (index + 1) * rootSpacing - LAYOUT_CONFIG.CARD_WIDTH / 2
+      const updatedNode = { ...node, position: { x, y: node.position.y } }
+      storyMap.set(node.story.id, updatedNode)
+      result.push(updatedNode)
+      processedNodes.add(node.story.id)
+
+      // Position children under this parent
+      positionChildren(
+        node.story.id,
+        x,
+        levels,
+        storyMap,
+        processedNodes,
+        result
+      )
+    })
+  }
+
   return result
+}
+
+/**
+ * Recursively position children under their parent
+ */
+function positionChildren(
+  parentId: string,
+  parentX: number,
+  levels: LayoutNode[][],
+  storyMap: Map<string, LayoutNode>,
+  processedNodes: Set<string>,
+  result: LayoutNode[]
+): void {
+  // Find all children of this parent
+  const children: LayoutNode[] = []
+
+  levels.forEach((level) => {
+    level.forEach((node) => {
+      if (
+        !processedNodes.has(node.story.id) &&
+        (node.story.dependencies || []).includes(parentId)
+      ) {
+        children.push(node)
+      }
+    })
+  })
+
+  if (children.length === 0) return
+
+  // Position children horizontally centered under parent
+  const childSpacing = Math.max(LAYOUT_CONFIG.HORIZONTAL_SPACING, 250)
+  const totalChildWidth = (children.length - 1) * childSpacing
+  const startX = parentX - totalChildWidth / 2
+
+  children.forEach((child, index) => {
+    const x = startX + index * childSpacing
+    const existingNode = storyMap.get(child.story.id)!
+    const updatedNode = {
+      ...child,
+      position: { x, y: existingNode.position.y },
+    }
+
+    storyMap.set(child.story.id, updatedNode)
+    result.push(updatedNode)
+    processedNodes.add(child.story.id)
+
+    // Recursively position grandchildren
+    positionChildren(
+      child.story.id,
+      x,
+      levels,
+      storyMap,
+      processedNodes,
+      result
+    )
+  })
 }
 
 /**
